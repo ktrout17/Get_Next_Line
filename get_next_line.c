@@ -3,15 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktrout <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: ktrout <ktrout@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 08:29:52 by ktrout            #+#    #+#             */
-/*   Updated: 2019/07/10 14:07:07 by ktrout           ###   ########.fr       */
+/*   Updated: 2019/07/11 11:16:37 by ktrout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
 #include "get_next_line.h"
+
+char		*ft_strdup(const char *s1)
+{
+        char            *s2;
+        size_t          i;
+
+        i = 0;
+        while (s1[i])
+                i += 1;
+        if (!(s2 = (char *)malloc(sizeof(char) * (i + 1))))
+                return (NULL);
+        i = -1;
+        while (s1[++i])
+                s2[i] = s1[i];
+        s2[i] = '\0';
+        return (s2);
+}
+
+/*
+** Allocates with malloc() and returns a “fresh” string ending with ’\0’,
+** result of the concatenation of s1 and s2. If the allocation fails the
+** function returns NULL.
+*/
+
+char		*ft_strjoin(char const *s1, char const *s2)
+{
+        char            *s3;
+        char            *tmp_s3;
+        size_t          i;
+        size_t          j;
+
+        j = 0;
+        i = 0;
+        while (s1[i])
+                i += 1;
+        while (s2[j])
+                j += 1;
+        if (!s1 || !s2 || !(s3 = (char *)malloc(sizeof(char) * (i + j + 1))))
+                return (NULL);
+        tmp_s3 = s3;
+        while (*s1 != '\0')
+                *tmp_s3++ = *s1++;
+        while (*s2 != '\0')
+                *tmp_s3++ = *s2++;
+        *tmp_s3 = '\0';
+        return (s3);
+}
 
 /*
 ** This function verifies if the text in the stack has a newline. If it
@@ -31,10 +78,8 @@ static int	verify_newline(char **stack, char **line)
 	i = 0;
 	check_stack = *stack;
 	while (check_stack[i] != '\n')
-	{
 		if (!check_stack[i++])
 			return (0);
-	}
 	temp_stack = &check_stack[i];
 	*temp_stack = '\0';
 	*line = ft_strdup(*stack);
@@ -61,11 +106,9 @@ static int	verify_newline(char **stack, char **line)
 static int	read_file(int fd, char *heap, char **stack, char **line)
 {
 	int		ret;
-	int		ret_value;
 	char	*temp_stack;
 
 	ret = read(fd, heap, BUFF_SIZE);
-	ret_value = 0;
 	while (ret > 0)
 	{
 		heap[ret] = '\0';
@@ -108,7 +151,7 @@ int			get_next_line(const int fd, char **line)
 	int				i;
 
 	if (!line || (read(fd, stack[fd], 0) < 0) || (fd < 0 || fd >= MAX_FD) ||
-			(!heap = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+			(!(heap = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1)))))
 		return (-1);
 	if (stack[fd])
 		if (verify_newline(&stack[fd], line))

@@ -6,7 +6,7 @@
 /*   By: ktrout <ktrout@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 08:29:52 by ktrout            #+#    #+#             */
-/*   Updated: 2019/07/12 15:31:15 by ktrout           ###   ########.fr       */
+/*   Updated: 2019/07/15 08:37:19 by ktrout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,24 +102,21 @@ int			get_next_line(const int fd, char **line)
 	int				ret;
 	int				i;
 
-	return ((fd < 0) ? -1 : fd);
-	if (!line || (read(fd, stack[fd], 0) < 0) || fd < 0 || fd >= MAX_FD || 
+	if ((!line) || (fd < 0) || (read(fd, stack[fd], 0) < 0) || (fd >= MAX_FD) ||
 		(!(heap = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1)))))
-		return (-1);	
+		return (-1);
 	if (stack[fd])
 		if (verify_newline(&stack[fd], line))
 			return (1);
 	i = 0;
 	while (i < BUFF_SIZE)
 		heap[i++] = '\0';
-	ret = read_file(fd, heap,  &stack[fd], line);
+	ret = read_file(fd, heap, &stack[fd], line);
 	free(heap);
 	if (ret != 0 || stack[fd] == NULL || stack[fd][0] == '\0')
 	{
-		*line = (!ret && *line) ? NULL : *line;
-//		if (!ret && *line)
-//			*line = NULL;
-//		return (ret);
+		*line = ((!ret && *line) ? NULL : *line);
+		return (ret);
 	}
 	*line = stack[fd];
 	stack[fd] = NULL;

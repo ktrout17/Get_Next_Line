@@ -3,4 +3,4 @@
 C project where you have to read from a specified file descriptor
 (stdin, stdout or stderr).
 
-Final Mark: 121/100
+Final Mark: 121/125
